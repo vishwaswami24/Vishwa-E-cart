@@ -15,7 +15,7 @@ Vishwa E-cart is a Django-based e-commerce platform designed for selling electri
 ## Technologies Used
 
 - **Backend**: Django (Python)
-- **Database**: SQLite (default Django database)
+- **Database**: MySQL
 - **Frontend**: HTML, CSS, JavaScript, Bootstrap
 - **Payment Gateway**: Razorpay
 - **Email**: Django's built-in email system
@@ -83,3 +83,4 @@ Contributions are welcome! Please fork the repository and submit a pull request.
 ## License
 
 This project is licensed under the MIT License.
+
