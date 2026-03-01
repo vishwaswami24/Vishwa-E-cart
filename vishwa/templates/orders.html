@@ -1,0 +1,209 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block 'main' %}
+
+<div class="container py-5">
+    <h1 class="page-title text-center mb-5">MY ORDERS</h1>
+
+    {% if orders %}
+        {% for order in orders %}
+            {% if forloop.first %}
+                <div class="customer-info-card mb-4">
+                    <h5 class="info-card-title">CUSTOMER DETAILS</h5>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <span class="info-label">NAME</span>
+                            <span class="info-value">{{ user.first_name }} {{ user.last_name }}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">EMAIL</span>
+                            <span class="info-value">{{ user.email }}</span>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        {% endfor %}
+
+        <div class="orders-list">
+            {% for order in orders %}
+                <div class="order-card">
+                    <div class="row g-3 align-items-center">
+                        <div class="col-md-2">
+                            <img src="{{ order.pid.pimage.url }}" alt="{{ order.pid.name }}" class="order-image">
+                        </div>
+                        <div class="col-md-7">
+                            <h5 class="order-product-name">{{ order.pid.name }}</h5>
+                            <p class="order-detail">
+                                <span class="detail-label">CATEGORY:</span>
+                                {% if order.pid.cat == 1 %}Tubelight{% elif order.pid.cat == 2 %}Fan{% else %}Bulb{% endif %}
+                            </p>
+                            <p class="order-detail">
+                                <span class="detail-label">PRICE:</span> ₹{{ order.pid.price }}
+                            </p>
+                            <p class="order-detail">
+                                <span class="detail-label">QUANTITY:</span> {{ order.qty }}
+                            </p>
+                            <p class="order-detail">
+                                <span class="detail-label">ORDER ID:</span> {{ order.orderid }}
+                            </p>
+                            <p class="order-detail">
+                                <span class="detail-label">DATE:</span> {{ order.date|date:"M d, Y" }}
+                            </p>
+                        </div>
+                        <div class="col-md-3 text-end">
+                            <p class="order-total">₹{{ order.amt }}</p>
+                            <span class="order-status">DELIVERED</span>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="empty-state">
+            <i class="bi bi-receipt empty-icon"></i>
+            <h4 class="empty-title">NO ORDERS YET</h4>
+            <p class="empty-text">You haven't placed any orders yet</p>
+            <a href="/products" class="btn btn-dark btn-lg mt-3">START SHOPPING</a>
+        </div>
+    {% endif %}
+</div>
+
+<style>
+.page-title {
+    font-size: 32px;
+    font-weight: 300;
+    letter-spacing: 4px;
+    color: #1a1a1a;
+}
+
+.customer-info-card {
+    background: #fafafa;
+    border: 1px solid #e0e0e0;
+    padding: 30px;
+}
+
+.info-card-title {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    color: #1a1a1a;
+    margin-bottom: 20px;
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.info-item {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.info-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    color: #757575;
+}
+
+.info-value {
+    font-size: 13px;
+    color: #1a1a1a;
+}
+
+.orders-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.order-card {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    padding: 20px;
+}
+
+.order-image {
+    width: 100%;
+    height: 120px;
+    object-fit: cover;
+    border: 1px solid #e0e0e0;
+}
+
+.order-product-name {
+    font-size: 14px;
+    font-weight: 500;
+    color: #1a1a1a;
+    margin-bottom: 10px;
+}
+
+.order-detail {
+    font-size: 11px;
+    color: #757575;
+    margin-bottom: 6px;
+}
+
+.detail-label {
+    font-weight: 600;
+    color: #1a1a1a;
+}
+
+.order-total {
+    font-size: 20px;
+    font-weight: 600;
+    color: #1a1a1a;
+    margin-bottom: 8px;
+}
+
+.order-status {
+    display: inline-block;
+    padding: 6px 16px;
+    background: #1a1a1a;
+    color: #fff;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 80px 20px;
+}
+
+.empty-icon {
+    font-size: 80px;
+    color: #e0e0e0;
+    margin-bottom: 20px;
+}
+
+.empty-title {
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    color: #1a1a1a;
+    margin-bottom: 10px;
+}
+
+.empty-text {
+    font-size: 13px;
+    color: #757575;
+}
+
+@media (max-width: 768px) {
+    .order-card {
+        padding: 20px;
+    }
+    
+    .order-total {
+        font-size: 20px;
+        margin-top: 20px;
+    }
+}
+</style>
+
+{% endblock 'main' %}
