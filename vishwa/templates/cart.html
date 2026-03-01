@@ -1,0 +1,341 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block 'main' %}
+
+<div class="container py-5">
+    <h1 class="page-title text-center mb-5">SHOPPING CART</h1>
+
+    {% if n != 0 %}
+    <div class="row">
+        <div class="col-lg-8 mb-4">
+            {% for x in c %}
+            {% if forloop.counter == 1 %}
+            <div class="customer-info-card mb-4">
+                <h5 class="info-card-title">CUSTOMER DETAILS</h5>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <span class="info-label">NAME</span>
+                        <span class="info-value">{{x.cart_item.userid.first_name}} {{x.cart_item.userid.last_name}}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">EMAIL</span>
+                        <span class="info-value">{{x.cart_item.userid.email}}</span>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            {% endfor %}
+
+            {% for x in c %}
+            <div class="cart-item-card">
+                <div class="row g-3 align-items-center">
+                    <div class="col-md-2">
+                        <img src="{{x.cart_item.pid.pimage.url}}" alt="{{x.cart_item.pid.name}}" class="cart-image">
+                    </div>
+                    <div class="col-md-6">
+                        <h5 class="cart-product-name">{{x.cart_item.pid.name}}</h5>
+                        <p class="cart-detail">
+                            <span class="detail-label">CATEGORY:</span>
+                            {% if x.cart_item.pid.cat == 1 %}Tubelight{% elif x.cart_item.pid.cat == 2 %}Fan{% else %}Bulb{% endif %}
+                        </p>
+                        <p class="cart-detail">
+                            <span class="detail-label">PRICE:</span> ₹{{x.cart_item.pid.price}}
+                        </p>
+                        <div class="quantity-control">
+                            <button class="qty-btn" onclick="window.location.href='/updateqty/0/{{x.cart_item.id}}'">-</button>
+                            <input type="text" class="qty-input" value="{{x.cart_item.qty}}" readonly>
+                            <button class="qty-btn" onclick="window.location.href='/updateqty/1/{{x.cart_item.id}}'">+</button>
+                        </div>
+                    </div>
+                    <div class="col-md-4 text-end">
+                        <p class="cart-total">₹{{x.item_total}}</p>
+                        <a href="/removecart/{{x.cart_item.id}}" class="remove-btn">REMOVE</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="col-lg-4">
+            <div class="summary-card">
+                <h5 class="summary-title">ORDER SUMMARY</h5>
+                <div class="summary-row">
+                    <span>ITEMS ({{n}})</span>
+                    <span>₹{{total}}</span>
+                </div>
+                <div class="summary-row">
+                    <span>DELIVERY</span>
+                    <span>FREE</span>
+                </div>
+                <div class="summary-divider"></div>
+                <div class="summary-row summary-total">
+                    <span>TOTAL</span>
+                    <span>₹{{total}}</span>
+                </div>
+                <a href="/placeorder" class="checkout-btn">PROCEED TO CHECKOUT</a>
+                <a href="/products" class="continue-btn">CONTINUE SHOPPING</a>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="empty-state">
+        <i class="bi bi-cart3 empty-icon"></i>
+        <h4 class="empty-title">YOUR CART IS EMPTY</h4>
+        <p class="empty-text">Add some products to get started</p>
+        <a href="/products" class="btn btn-dark btn-lg mt-3">START SHOPPING</a>
+    </div>
+    {% endif %}
+</div>
+
+<style>
+.page-title {
+    font-size: 32px;
+    font-weight: 300;
+    letter-spacing: 4px;
+    color: #1a1a1a;
+}
+
+.customer-info-card {
+    background: #fafafa;
+    border: 1px solid #e0e0e0;
+    padding: 25px;
+}
+
+.info-card-title {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    color: #1a1a1a;
+    margin-bottom: 15px;
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+}
+
+.info-item {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.info-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    color: #757575;
+}
+
+.info-value {
+    font-size: 13px;
+    color: #1a1a1a;
+}
+
+.cart-item-card {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    padding: 20px;
+    margin-bottom: 15px;
+}
+
+.cart-image {
+    width: 100%;
+    height: 100px;
+    object-fit: cover;
+    border: 1px solid #e0e0e0;
+}
+
+.cart-product-name {
+    font-size: 14px;
+    font-weight: 500;
+    color: #1a1a1a;
+    margin-bottom: 8px;
+}
+
+.cart-detail {
+    font-size: 11px;
+    color: #757575;
+    margin-bottom: 5px;
+}
+
+.detail-label {
+    font-weight: 600;
+    color: #1a1a1a;
+}
+
+.quantity-control {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    margin-top: 10px;
+}
+
+.qty-btn {
+    width: 30px;
+    height: 30px;
+    border: 1px solid #e0e0e0;
+    background: #fff;
+    color: #1a1a1a;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.qty-btn:hover {
+    background: #1a1a1a;
+    color: #fff;
+}
+
+.qty-input {
+    width: 50px;
+    height: 30px;
+    border: 1px solid #e0e0e0;
+    border-left: none;
+    border-right: none;
+    text-align: center;
+    font-size: 12px;
+    color: #1a1a1a;
+}
+
+.cart-total {
+    font-size: 18px;
+    font-weight: 600;
+    color: #1a1a1a;
+    margin-bottom: 10px;
+}
+
+.remove-btn {
+    display: inline-block;
+    padding: 6px 16px;
+    background: #fff;
+    border: 1px solid #1a1a1a;
+    color: #1a1a1a;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-decoration: none;
+    transition: all 0.3s;
+}
+
+.remove-btn:hover {
+    background: #1a1a1a;
+    color: #fff;
+}
+
+.summary-card {
+    background: #fafafa;
+    border: 1px solid #e0e0e0;
+    padding: 25px;
+    position: sticky;
+    top: 20px;
+}
+
+.summary-title {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    color: #1a1a1a;
+    margin-bottom: 20px;
+}
+
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: #757575;
+    margin-bottom: 12px;
+}
+
+.summary-divider {
+    height: 1px;
+    background: #e0e0e0;
+    margin: 15px 0;
+}
+
+.summary-total {
+    font-size: 16px;
+    font-weight: 600;
+    color: #1a1a1a;
+    margin-bottom: 20px;
+}
+
+.checkout-btn {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    background: #1a1a1a;
+    color: #fff;
+    text-align: center;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-decoration: none;
+    margin-bottom: 10px;
+    transition: all 0.3s;
+}
+
+.checkout-btn:hover {
+    background: #000;
+    color: #fff;
+}
+
+.continue-btn {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    background: #fff;
+    border: 1px solid #1a1a1a;
+    color: #1a1a1a;
+    text-align: center;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-decoration: none;
+    transition: all 0.3s;
+}
+
+.continue-btn:hover {
+    background: #1a1a1a;
+    color: #fff;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 80px 20px;
+}
+
+.empty-icon {
+    font-size: 80px;
+    color: #e0e0e0;
+    margin-bottom: 20px;
+}
+
+.empty-title {
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    color: #1a1a1a;
+    margin-bottom: 10px;
+}
+
+.empty-text {
+    font-size: 13px;
+    color: #757575;
+}
+
+@media (max-width: 768px) {
+    .cart-item-card {
+        padding: 15px;
+    }
+    
+    .cart-total {
+        margin-top: 15px;
+    }
+}
+</style>
+
+{% endblock 'main' %}
