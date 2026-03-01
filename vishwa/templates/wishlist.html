@@ -1,0 +1,190 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block 'main' %}
+
+<div class="container py-5">
+    <h1 class="page-title text-center mb-5">MY WISHLIST</h1>
+
+    {% if wishlist_items %}
+    <div class="row g-4">
+        {% for item in wishlist_items %}
+        <div class="col-lg-3 col-md-4 col-sm-6">
+            <div class="wishlist-card">
+                <div class="wishlist-image-wrapper">
+                    <img src="{{item.product.pimage.url}}" class="wishlist-image" alt="{{item.product.name}}" loading="lazy">
+                    <button onclick="removeFromWishlist({{item.product.id}})" class="remove-icon">
+                        <i class="bi bi-x"></i>
+                    </button>
+                </div>
+                <div class="wishlist-info">
+                    <p class="wishlist-brand">{{item.product.brand}}</p>
+                    <h6 class="wishlist-name">{{item.product.name}}</h6>
+                    <p class="wishlist-price">₹{{item.product.price}}</p>
+                    <a href="/product_details/{{item.product.id}}" class="view-btn">VIEW DETAILS</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-state">
+        <i class="bi bi-heart empty-icon"></i>
+        <h4 class="empty-title">YOUR WISHLIST IS EMPTY</h4>
+        <p class="empty-text">Save your favorite products here</p>
+        <a href="/products" class="btn btn-dark btn-lg mt-3">START SHOPPING</a>
+    </div>
+    {% endif %}
+</div>
+
+<style>
+.page-title {
+    font-size: 32px;
+    font-weight: 300;
+    letter-spacing: 4px;
+    color: #1a1a1a;
+}
+
+.wishlist-card {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+}
+
+.wishlist-card:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+}
+
+.wishlist-image-wrapper {
+    position: relative;
+    padding-top: 125%;
+    background: #fafafa;
+    overflow: hidden;
+}
+
+.wishlist-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.remove-icon {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 32px;
+    height: 32px;
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    color: #1a1a1a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.remove-icon:hover {
+    background: #1a1a1a;
+    color: #fff;
+    border-color: #1a1a1a;
+}
+
+.remove-icon i {
+    font-size: 20px;
+}
+
+.wishlist-info {
+    padding: 18px 12px;
+    text-align: center;
+}
+
+.wishlist-brand {
+    font-size: 10px;
+    color: #9e9e9e;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 6px;
+    font-weight: 500;
+}
+
+.wishlist-name {
+    font-size: 13px;
+    font-weight: 400;
+    color: #1a1a1a;
+    margin-bottom: 10px;
+    min-height: 38px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    line-height: 1.4;
+}
+
+.wishlist-price {
+    font-size: 15px;
+    font-weight: 600;
+    color: #1a1a1a;
+    margin-bottom: 12px;
+}
+
+.view-btn {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    background: #1a1a1a;
+    color: #fff;
+    text-align: center;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-decoration: none;
+    transition: all 0.3s;
+}
+
+.view-btn:hover {
+    background: #000;
+    color: #fff;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 80px 20px;
+}
+
+.empty-icon {
+    font-size: 80px;
+    color: #e0e0e0;
+    margin-bottom: 20px;
+}
+
+.empty-title {
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    color: #1a1a1a;
+    margin-bottom: 10px;
+}
+
+.empty-text {
+    font-size: 13px;
+    color: #757575;
+}
+</style>
+
+<script>
+function removeFromWishlist(pid) {
+    if (confirm('Remove this item from wishlist?')) {
+        fetch('/toggle_wishlist/' + pid)
+            .then(response => response.json())
+            .then(data => {
+                location.reload();
+            });
+    }
+}
+</script>
+
+{% endblock 'main' %}
