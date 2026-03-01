@@ -1,0 +1,285 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block 'main' %}
+
+<div class="container py-5">
+    <h1 class="page-title text-center mb-5">MY PROFILE</h1>
+
+    <div class="row g-4">
+        <!-- Profile Info -->
+        <div class="col-lg-4">
+            <div class="profile-card">
+                {% for x in data %}
+                    {% if forloop.counter == 1 %}
+                        <div class="profile-image-wrapper">
+                            {% if x.profile_image %}
+                                <img class="profile-image" src="{{ x.profile_image.url }}" alt="Profile">
+                            {% elif x.gender == "Male" %}
+                                <img class="profile-image" src="{% static 'images/man.png' %}" alt="Profile">
+                            {% else %}
+                                <img class="profile-image" src="{% static 'images/woman.png' %}" alt="Profile">
+                            {% endif %}
+                        </div>
+
+                        <h3 class="profile-name">{{x.userid.first_name}} {{x.userid.last_name}}</h3>
+                        <p class="profile-email">{{x.userid.email}}</p>
+
+                        <div class="profile-details">
+                            <div class="profile-detail-item">
+                                <span class="detail-label">PHONE</span>
+                                <span class="detail-value">{{x.mobile}}</span>
+                            </div>
+                            <div class="profile-detail-item">
+                                <span class="detail-label">ADDRESS</span>
+                                <span class="detail-value">{{x.address}}, {{x.state}}, {{x.country}} - {{x.pincode}}</span>
+                            </div>
+                            {% if x.date_of_birth %}
+                            <div class="profile-detail-item">
+                                <span class="detail-label">DATE OF BIRTH</span>
+                                <span class="detail-value">{{x.date_of_birth|date:"M d, Y"}}</span>
+                            </div>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Edit Form -->
+        <div class="col-lg-8">
+            <div class="edit-form-card">
+                <h5 class="form-card-title">EDIT PROFILE</h5>
+                <form action="" method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label">FIRST NAME</label>
+                            <input type="text" class="form-input" name="fname" value="{% for x in data %}{% if forloop.counter == 1 %}{{x.userid.first_name}}{% endif %}{% endfor %}" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">LAST NAME</label>
+                            <input type="text" class="form-input" name="lname" value="{% for x in data %}{% if forloop.counter == 1 %}{{x.userid.last_name}}{% endif %}{% endfor %}" required>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label">GENDER</label>
+                            <div class="gender-options">
+                                {% for x in data %}
+                                    {% if forloop.counter == 1 %}
+                                        <label class="gender-option">
+                                            <input type="radio" name="inlineRadioOptions" value="Male" {% if x.gender == 'Male' %}checked{% endif %}>
+                                            <span>Male</span>
+                                        </label>
+                                        <label class="gender-option">
+                                            <input type="radio" name="inlineRadioOptions" value="Female" {% if x.gender == 'Female' %}checked{% endif %}>
+                                            <span>Female</span>
+                                        </label>
+                                        <label class="gender-option">
+                                            <input type="radio" name="inlineRadioOptions" value="Other" {% if x.gender == 'Other' %}checked{% endif %}>
+                                            <span>Other</span>
+                                        </label>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">MOBILE</label>
+                            <input type="tel" class="form-input" name="mobile" value="{% for x in data %}{% if forloop.counter == 1 %}{{x.mobile}}{% endif %}{% endfor %}" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">EMAIL</label>
+                            <input type="email" class="form-input" name="mail" value="{% for x in data %}{% if forloop.counter == 1 %}{{x.userid.email}}{% endif %}{% endfor %}" required>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label">ADDRESS</label>
+                            <input type="text" class="form-input" name="add" value="{% for x in data %}{% if forloop.counter == 1 %}{{x.address}}{% endif %}{% endfor %}" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">PINCODE</label>
+                            <input type="text" class="form-input" id="pincode" name="pin" value="{% for x in data %}{% if forloop.counter == 1 %}{{x.pincode}}{% endif %}{% endfor %}" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">CITY</label>
+                            <input type="text" class="form-input" id="city" name="city" value="{% for x in data %}{% if forloop.counter == 1 %}{{x.city}}{% endif %}{% endfor %}" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">STATE</label>
+                            <input type="text" class="form-input" id="state" name="state" value="{% for x in data %}{% if forloop.counter == 1 %}{{x.state}}{% endif %}{% endfor %}" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">COUNTRY</label>
+                            <input type="text" class="form-input" id="country" name="country" value="{% for x in data %}{% if forloop.counter == 1 %}{{x.country}}{% endif %}{% endfor %}" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">PROFILE IMAGE</label>
+                            <input type="file" class="form-input" name="profile_image" accept="image/*">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">DATE OF BIRTH</label>
+                            <input type="date" class="form-input" name="dob" value="{% for x in data %}{% if forloop.counter == 1 %}{{x.date_of_birth|date:'Y-m-d'}}{% endif %}{% endfor %}">
+                        </div>
+                        <div class="col-12">
+                            <button type="submit" class="btn btn-dark btn-lg w-100">SAVE CHANGES</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.page-title {
+    font-size: 32px;
+    font-weight: 300;
+    letter-spacing: 4px;
+    color: #1a1a1a;
+}
+
+.profile-card {
+    background: #fafafa;
+    border: 1px solid #e0e0e0;
+    padding: 40px 30px;
+    text-align: center;
+}
+
+.profile-image-wrapper {
+    margin-bottom: 25px;
+}
+
+.profile-image {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #1a1a1a;
+}
+
+.profile-name {
+    font-size: 20px;
+    font-weight: 500;
+    color: #1a1a1a;
+    margin-bottom: 8px;
+}
+
+.profile-email {
+    font-size: 13px;
+    color: #757575;
+    margin-bottom: 30px;
+}
+
+.profile-details {
+    text-align: left;
+}
+
+.profile-detail-item {
+    padding: 15px 0;
+    border-bottom: 1px solid #e0e0e0;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.profile-detail-item:last-child {
+    border-bottom: none;
+}
+
+.detail-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    color: #757575;
+}
+
+.detail-value {
+    font-size: 12px;
+    color: #1a1a1a;
+}
+
+.edit-form-card {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    padding: 40px;
+}
+
+.form-card-title {
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    color: #1a1a1a;
+    margin-bottom: 30px;
+}
+
+.form-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    color: #1a1a1a;
+    margin-bottom: 8px;
+    display: block;
+}
+
+.form-input {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #d0d0d0;
+    border-radius: 2px;
+    font-size: 13px;
+    color: #1a1a1a;
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: #1a1a1a;
+}
+
+.gender-options {
+    display: flex;
+    gap: 20px;
+}
+
+.gender-option {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+}
+
+.gender-option input {
+    cursor: pointer;
+}
+
+.gender-option span {
+    font-size: 13px;
+    color: #1a1a1a;
+}
+
+@media (max-width: 991px) {
+    .profile-card {
+        margin-bottom: 30px;
+    }
+}
+</style>
+
+<script>
+document.getElementById('pincode').addEventListener('blur', function() {
+    const pincode = this.value;
+    if (pincode.length === 6) {
+        fetch(`https://api.postalpincode.in/pincode/${pincode}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data[0].Status === 'Success') {
+                    const postOffice = data[0].PostOffice[0];
+                    document.getElementById('city').value = postOffice.District;
+                    document.getElementById('state').value = postOffice.State;
+                    document.getElementById('country').value = postOffice.Country;
+                }
+            })
+            .catch(error => console.error('Error:', error));
+    }
+});
+</script>
+
+{% endblock 'main' %}
