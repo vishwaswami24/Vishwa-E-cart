@@ -1,0 +1,324 @@
+{% load mathfilters static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #fafafa;
+            padding: 40px 20px;
+        }
+
+        .invoice-container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: #fff;
+            border: 1px solid #e0e0e0;
+        }
+
+        .invoice-header {
+            padding: 40px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .header-top {
+            display: flex;
+            align-items: flex-start;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .logo {
+            width: 100px;
+            height: 100px;
+        }
+
+        .header-title h1 {
+            font-size: 18px;
+            font-weight: 600;
+            letter-spacing: 2px;
+            color: #1a1a1a;
+            margin-bottom: 8px;
+        }
+
+        .header-title p {
+            font-size: 11px;
+            color: #757575;
+        }
+
+        .digital-sign {
+            font-size: 10px;
+            color: #757575;
+            line-height: 1.6;
+        }
+
+        .invoice-body {
+            padding: 40px;
+        }
+
+        .info-section {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+        }
+
+        .info-section.single {
+            display: block;
+        }
+
+        .info-box {
+            flex: 0 0 45%;
+            max-width: 45%;
+        }
+
+        .info-box h3 {
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            color: #1a1a1a;
+            margin-bottom: 10px;
+        }
+
+        .info-box p {
+            font-size: 11px;
+            color: #757575;
+            line-height: 1.6;
+        }
+
+        .order-info {
+            background: #fafafa;
+            padding: 20px;
+            margin-bottom: 30px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .order-info p {
+            font-size: 11px;
+            color: #757575;
+            margin-bottom: 8px;
+        }
+
+        .order-info strong {
+            color: #1a1a1a;
+        }
+
+        .invoice-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+        }
+
+        .invoice-table th {
+            background: #1a1a1a;
+            color: #fff;
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            padding: 12px 8px;
+            text-align: center;
+            border: 1px solid #1a1a1a;
+        }
+
+        .invoice-table td {
+            font-size: 11px;
+            color: #757575;
+            padding: 10px 8px;
+            text-align: center;
+            border: 1px solid #e0e0e0;
+        }
+
+        .invoice-table tbody tr:nth-child(odd) {
+            background: #fafafa;
+        }
+
+        .invoice-table tfoot td {
+            font-weight: 600;
+            color: #1a1a1a;
+            background: #fafafa;
+        }
+
+        .signature-section {
+            text-align: right;
+            padding: 30px 0;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .signature-section h4 {
+            font-size: 12px;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 40px;
+        }
+
+        .signature-section h5 {
+            font-size: 10px;
+            font-weight: 400;
+            color: #757575;
+        }
+
+        .invoice-note {
+            font-size: 10px;
+            color: #757575;
+            margin-bottom: 20px;
+        }
+
+        .invoice-footer {
+            background: #1a1a1a;
+            color: #fff;
+            padding: 20px 40px;
+            text-align: center;
+        }
+
+        .invoice-footer p {
+            font-size: 10px;
+            color: #9e9e9e;
+            margin-bottom: 5px;
+        }
+
+        @media print {
+            body {
+                background: #fff;
+                padding: 0;
+            }
+            .invoice-container {
+                border: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .info-section {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .info-box {
+                text-align: left !important;
+            }
+
+            .invoice-table {
+                font-size: 9px;
+            }
+
+            .invoice-table th,
+            .invoice-table td {
+                padding: 6px 4px;
+            }
+        }
+    </style>
+    <title>Invoice</title>
+</head>
+
+<body>
+    <div class="invoice-container">
+        <div class="invoice-header">
+            <div class="header-top">
+                <img src="cid:logo.png" alt="Vishwa E-cart Logo" class="logo">
+                <div class="header-title">
+                    <h1>TAX INVOICE/BILL OF SUPPLY/CASH MEMO</h1>
+                    <p>(Original for Recipient)</p>
+                </div>
+            </div>
+            <div class="digital-sign">
+                <strong>Digitally Signed by Vishwa E-cart Pvt. Ltd.</strong><br>
+                Date: {{ invoice_date|date:"d/m/Y H:i:s" }}
+            </div>
+        </div>
+
+        <div class="invoice-body">
+            <div class="info-section">
+                <div class="info-box">
+                    <h3>SOLD BY</h3>
+                    <p>{{name}}<br>{{address}}<br>{{city}}, {{state}}, {{pin}}<br>{{countrycode}}</p>
+                </div>
+            </div>
+
+            <div class="order-info">
+                <p><strong>Order Number:</strong> {{ sales.0.orderid }}</p>
+                <p><strong>Order Date:</strong> {{ order_date|date:"d/m/Y" }}</p>
+                <p><strong>Invoice Number:</strong> VEPL-INV-{{ sales.0.orderid }}</p>
+                <p><strong>Invoice Date:</strong> {{ invoice_date|date:"d/m/Y" }}</p>
+            </div>
+
+            <table style="width: 100%; margin-bottom: 30px;">
+                <tr>
+                    <td style="width: 45%; vertical-align: top;">
+                        <h3 style="font-size: 10px; font-weight: 600; letter-spacing: 1.5px; color: #1a1a1a; margin-bottom: 10px;">BILLING ADDRESS</h3>
+                        <p style="font-size: 11px; color: #757575; line-height: 1.6;">{{name}}<br>{{address}}<br>{{city}}, {{state}}<br>{{countrycode}}<br><strong>State/UT code:</strong> {{code}}</p>
+                    </td>
+                    <td style="width: 10%;"></td>
+                    <td style="width: 45%; vertical-align: top; text-align: right;">
+                        <h3 style="font-size: 10px; font-weight: 600; letter-spacing: 1.5px; color: #1a1a1a; margin-bottom: 10px;">SHIPPING ADDRESS</h3>
+                        <p style="font-size: 11px; color: #757575; line-height: 1.6;">{{name}}<br>{{address}}<br>{{city}}, {{state}}<br>{{countrycode}}<br><strong>State/UT code:</strong> {{code}}</p>
+                    </td>
+                </tr>
+            </table>
+
+            <table class="invoice-table">
+                <thead>
+                    <tr>
+                        <th>SR.NO.</th>
+                        <th>DESCRIPTION</th>
+                        <th>UNIT PRICE</th>
+                        <th>QTY</th>
+                        <th>NET AMOUNT</th>
+                        <th>TAX RATE</th>
+                        <th>TAX TYPE</th>
+                        <th>TAX AMOUNT</th>
+                        <th>TOTAL AMOUNT</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for sale in sales %}
+                    <tr>
+                        <td rowspan="2">{{ forloop.counter }}</td>
+                        <td rowspan="2">{{ sale.pid.name }}</td>
+                        <td rowspan="2">₹{{ sale.pid.price|floatformat:2 }}</td>
+                        <td rowspan="2">{{ sale.qty }}</td>
+                        <td rowspan="2">₹{{ sale.amt|floatformat:2 }}</td>
+                        <td>9%</td>
+                        <td>CGST</td>
+                        <td>₹{{ sale.amt|mul:0.09|floatformat:2 }}</td>
+                        <td>₹{{ sale.amt|mul:1.09|floatformat:2 }}</td>
+                    </tr>
+                    <tr>
+                        <td>9%</td>
+                        <td>SGST</td>
+                        <td>₹{{ sale.amt|mul:0.09|floatformat:2 }}</td>
+                        <td>₹{{ sale.amt|mul:1.09|floatformat:2 }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="7">TOTAL</td>
+                        <td>₹{{ total|mul:0.18|floatformat:2 }}</td>
+                        <td>₹{{ total|mul:1.18|floatformat:2 }}</td>
+                    </tr>
+                </tfoot>
+            </table>
+
+            <p class="invoice-note">Tax is not payable under reverse charge.</p>
+
+            <div class="signature-section">
+                <h4>For {{ company }}:</h4>
+                <h5>Authorised Signatory</h5>
+            </div>
+        </div>
+
+        <div class="invoice-footer">
+            <p>Vishwa E-cart Pvt. Ltd.</p>
+            <p>Please note that this invoice is not a demand for payment.</p>
+        </div>
+    </div>
+</body>
+
+</html>
